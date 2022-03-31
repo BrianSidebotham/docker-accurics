@@ -10,7 +10,7 @@ RUN apt-get update
 # git is used by accurics to get repository information
 RUN apt-get install -y wget git zip
 
-RUN wget -q https://github.com/accurics/terrascan/releases/download/v1.13.1/terrascan_1.13.2_Linux_x86_64.tar.gz \
+RUN wget -q https://github.com/accurics/terrascan/releases/download/v1.13.2/terrascan_1.13.2_Linux_x86_64.tar.gz \
     && tar xf terrascan*.tar.gz \
     && rm -f terrascan*.tar.gz \
     && chown root:root terrascan \
