@@ -78,7 +78,7 @@ jobs:
           file: accurics-terrascan.dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           tags:
-            - ghcr.io/briansidebotham/accurics-terrascan:ac-1.0.33-ts-1.13.1
+            - ghcr.io/briansidebotham/accurics-terrascan:ac-1.0.34-ts-1.13.2-tf-1.17.1
             - ghcr.io/briansidebotham/accurics-terrascan:latest
           labels: ${{ steps.meta.outputs.labels }}
 
