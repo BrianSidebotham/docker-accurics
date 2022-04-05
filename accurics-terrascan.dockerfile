@@ -4,10 +4,6 @@ ENV PATH="/opt/bin:${PATH}"
 
 WORKDIR /opt/bin
 
-RUN apt-get update
-
-# wget is used to download tools
-# git is used by accurics to get repository information
 RUN apt-get update \
     && apt-get install -y git \
     wget \
