@@ -8,7 +8,12 @@ RUN apt-get update
 
 # wget is used to download tools
 # git is used by accurics to get repository information
-RUN apt-get install -y wget git zip
+RUN apt-get update \
+    && apt-get install -y git \
+    wget \
+    zip \
+    && apt-get clean \
+    && apt-get autoremove --yes
 
 RUN wget -q https://github.com/accurics/terrascan/releases/download/v1.13.2/terrascan_1.13.2_Linux_x86_64.tar.gz \
     && tar xf terrascan*.tar.gz \
@@ -25,9 +30,6 @@ RUN wget -q https://releases.hashicorp.com/terraform/1.1.7/terraform_1.1.7_linux
     && rm -f terraform*.zip \
     && chown root:root terraform \
     && chmod 755 terraform
-
-RUN apt-get clean \
-    && apt-get autoremove --yes
 
 # Usually this container is used to run CI and have the accurics tools available and not run the tool directly.
 CMD ["/bin/bash"]
