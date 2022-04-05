@@ -14,11 +14,7 @@ The tools included in the image are `accurics` cli tool and `terrascan`. Using t
 
 In a Gitlab CI workflow you can use this container within an IaC repository like so:
 
-:::note
-
-This example uses Gitlab CI/CD variables to hold the accurics credentials in a config file
-
-:::
+> **NOTE:** This example uses Gitlab CI/CD variables to hold the accurics credentials in a config file
 
 **.gitlab-ci.yml**
 ```
@@ -45,7 +41,7 @@ scan-code:
       - accurics_report.json
   script:
     - cd ${CI_PROJECT_DIR} && echo "${ACCURICS_CONFIG}" > accurics.conf
-    - accurics scan -mode=pipeline -appurl=https://cloud.tenable.com/cns -config accurics.conf
+    - accurics scan -mode=pipeline -config accurics.conf
 ```
 
 Where accurics token will be the token value required to upload data.
