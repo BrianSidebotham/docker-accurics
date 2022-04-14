@@ -21,7 +21,7 @@ env:
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
   # The Terraform version we're releasing
-  TERRAFORM_VERSION: 1.1.7
+  TERRAFORM_VERSION: "1.1.7"
 
 jobs:
   build:
