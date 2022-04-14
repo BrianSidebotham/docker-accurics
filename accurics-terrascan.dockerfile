@@ -41,7 +41,7 @@ RUN wget -q https://releases.hashicorp.com/terraform/1.1.7/terraform_1.1.7_linux
     && echo "Checking signature file" \
     && gpg --verify terraform_1.1.7_SHA256SUMS.sig terraform_1.1.7_SHA256SUMS \
     && echo "Checking shasum" \
-    && shasum -a 256 -c terraform_1.1.7_SHA256SUMS \
+    && shasum --ignore-missing -a 256 -c terraform_1.1.7_SHA256SUMS \
     && unzip terraform*.zip \
     && rm -f terraform*.zip \
     && chmod 755 ./terraform
