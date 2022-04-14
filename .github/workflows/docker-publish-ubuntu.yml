@@ -34,7 +34,13 @@ jobs:
       # with sigstore/fulcio when running outside of PRs.
       id-token: write
 
+
     steps:
+      # Use bash variable substitution to lowercase the image name
+      - name: Lowercase repository name for docker build and push action
+        run: |
+          echo "IMAGE_NAME=${IMAGE_NAME,,}" >>${GITHUB_ENV}
+
       - name: Checkout repository
         uses: actions/checkout@v2
 
