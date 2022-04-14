@@ -20,7 +20,8 @@ env:
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
-
+  # The Terraform version we're releasing
+  TERRAFORM_VERSION: "1.1.7"
 
 jobs:
   build:
@@ -33,7 +34,13 @@ jobs:
       # with sigstore/fulcio when running outside of PRs.
       id-token: write
 
+
     steps:
+      # Use bash variable substitution to lowercase the image name
+      - name: Lowercase repository name for docker build and push action
+        run: |
+          echo "IMAGE_NAME=${IMAGE_NAME,,}" >>${GITHUB_ENV}
+
       - name: Checkout repository
         uses: actions/checkout@v2
 
@@ -74,10 +81,11 @@ jobs:
         id: build-and-push
         uses: docker/build-push-action@v2
         with:
+          build-args: TERRAFORM_VERSION=${{ env.TERRAFORM_VERSION }}
           context: .
           file: accurics-terrascan.dockerfile
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ghcr.io/briansidebotham/accurics-terrascan:ac-1.0.34-ts-1.13.2-tf-1.17.1, ghcr.io/briansidebotham/accurics-terrascan:latest
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:ac-1.0.34-ts-1.13.2-tf-${{ env.TERRAFORM_VERSION }}, ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
           labels: ${{ steps.meta.outputs.labels }}
 
       # # Sign the resulting Docker image digest except on PRs.
