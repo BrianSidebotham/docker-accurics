@@ -75,8 +75,7 @@ jobs:
         id: build-and-push
         uses: docker/build-push-action@v2
         with:
-          buildArgs:
-            - TERRAFORM_VERSION: ${{ env.TERRAFORM_VERSION }}
+          build-args: TERRAFORM_VERSION=${{ env.TERRAFORM_VERSION }}
           context: .
           file: accurics-terrascan.dockerfile
           push: ${{ github.event_name != 'pull_request' }}
