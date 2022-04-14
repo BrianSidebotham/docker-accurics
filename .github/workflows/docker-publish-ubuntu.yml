@@ -20,7 +20,8 @@ env:
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
-
+  # The Terraform version we're releasing
+  TERRAFORM_VERSION: 1.1.7
 
 jobs:
   build:
@@ -77,7 +78,7 @@ jobs:
           context: .
           file: accurics-terrascan.dockerfile
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ghcr.io/briansidebotham/accurics-terrascan:ac-1.0.34-ts-1.13.2-tf-1.17.1, ghcr.io/briansidebotham/accurics-terrascan:latest
+          tags: ghcr.io/briansidebotham/accurics-terrascan:ac-1.0.34-ts-1.13.2-tf-${{ env.TERRAFORM_VERSION }}, ghcr.io/briansidebotham/accurics-terrascan:latest
           labels: ${{ steps.meta.outputs.labels }}
 
       # # Sign the resulting Docker image digest except on PRs.

@@ -1,5 +1,7 @@
 FROM ubuntu:20.04
 
+ARG TERRAFORM_VERSION
+
 ENV PATH="/opt/bin:${PATH}"
 
 WORKDIR /opt/bin
@@ -32,11 +34,12 @@ RUN wget -q https://downloads.accurics.com/cli/1.0.34/accurics_linux \
     && mv ./accurics_linux ./accurics \
     && chmod 755 ./accurics
 
-RUN wget -q https://releases.hashicorp.com/terraform/1.1.7/terraform_1.1.7_linux_amd64.zip \
-    && wget -q https://releases.hashicorp.com/terraform/1.1.7/terraform_1.1.7_SHA256SUMS \
-    && wget -q https://releases.hashicorp.com/terraform/1.1.7/terraform_1.1.7_SHA256SUMS.sig \
-    && gpg --verify terraform_1.1.7_SHA256SUMS.sig terraform_1.1.7_SHA256SUMS \
-    && shasum --ignore-missing -a 256 -c terraform_1.1.7_SHA256SUMS \
+# The recommended way to ensure we're not installing poisoned binaries from Hashicorp
+RUN wget -q https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
+    && wget -q https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_SHA256SUMS \
+    && wget -q https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_SHA256SUMS.sig \
+    && gpg --verify terraform_1.1.7_SHA256SUMS.sig terraform_${TERRAFORM_VERSION}_SHA256SUMS \
+    && shasum --ignore-missing -a 256 -c terraform_${TERRAFORM_VERSION}_SHA256SUMS \
     && unzip terraform*.zip \
     && rm -f terraform*.zip \
     && chmod 755 ./terraform
