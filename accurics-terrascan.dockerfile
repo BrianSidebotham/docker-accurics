@@ -6,14 +6,23 @@ WORKDIR /opt/bin
 
 COPY accurics_linux.md5 .
 COPY terrascan_1.13.2_Linux_x86_64.tar.gz.md5 .
-COPY terraform_1.1.7_linux_amd64.zip.md5 .
+#COPY terraform_1.1.7_linux_amd64.zip.md5 .
 
+# Accurics uses git to determine information about the repo being scanned
 RUN apt-get update \
     && apt-get install -y git \
+    gpg \
     wget \
     zip \
     && apt-get clean \
     && apt-get autoremove --yes
+
+RUN gpg --quick-generate-key --batch --passphrase "" human@example.com \
+    && wget -q https://keybase.io/hashicorp/pgp_keys.asc \
+    && echo "Importing key" \
+    && gpg --import pgp_keys.asc \
+    && echo "Signing key" \
+    && gpg --batch --yes --sign-key 34365D9472D7468F
 
 RUN wget -q https://github.com/accurics/terrascan/releases/download/v1.13.2/terrascan_1.13.2_Linux_x86_64.tar.gz \
     && tar xf terrascan*.tar.gz \
@@ -27,7 +36,12 @@ RUN wget -q https://downloads.accurics.com/cli/1.0.34/accurics_linux \
     && chmod 755 ./accurics
 
 RUN wget -q https://releases.hashicorp.com/terraform/1.1.7/terraform_1.1.7_linux_amd64.zip \
-    && md5sum -c terraform_1.1.7_linux_amd64.zip.md5 \
+    && wget -q https://releases.hashicorp.com/terraform/1.1.7/terraform_1.1.7_SHA256SUMS \
+    && wget -q https://releases.hashicorp.com/terraform/1.1.7/terraform_1.1.7_SHA256SUMS.sig \
+    && echo "Checking signature file" \
+    && gpg --verify terraform_1.1.7_SHA256SUMS.sig terraform_1.1.7_SHASUMS \
+    && echo "Checking shasum" \
+    && shasum -a 256 -c terraform_1.1.7_SHA256SUMS \
     && unzip terraform*.zip \
     && rm -f terraform*.zip \
     && chmod 755 ./terraform
