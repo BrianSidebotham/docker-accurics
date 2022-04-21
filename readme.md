@@ -21,8 +21,16 @@ In a Gitlab CI workflow you can use this container within an IaC repository like
 variables:
   ACCURICS_CONFIG: ${ACCURICS_CONFIG}
 
+  # Export the original git commit branch so we do not continuously add new "repos"
+  # to the Tenable.CS project. This is because Gitlab's CICD detaches head and then
+  # creates a new branch called pipelines/n and this causes a new branch to be
+  # referenced by Tenable.CS - branches are treated as different repos because we
+  #could have one repo with the branches development/test/staging/production, etc.
+  GIT_BRANCH: ${CI_COMMIT_BRANCH}
+
 stages:
-  - test
+  - scan
+  - plan
 
 default:
   image: ghcr.io/briansidebotham/accurics-terrascan:latest
@@ -33,7 +41,7 @@ default:
     - 'echo "Terrascan: $(terrascan version)"'
 
 scan-code:
-  stage: test
+  stage: scan
   artifacts:
     when: always
     paths:
@@ -42,6 +50,13 @@ scan-code:
   script:
     - cd ${CI_PROJECT_DIR} && echo "${ACCURICS_CONFIG}" > accurics.conf
     - accurics scan -mode=pipeline -config accurics.conf
+
+plan-code:
+  stage: plan
+  script:
+    - cd ${CI_PROJECT_DIR}
+    - accurics init -config=accurics.conf
+    - accurics plan -mode=pipeline -config=accurics.conf
 ```
 
 Where accurics token will be the token value required to upload data.
