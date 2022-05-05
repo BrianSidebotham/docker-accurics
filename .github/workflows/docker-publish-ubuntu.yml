@@ -19,7 +19,9 @@ env:
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
   # The Terraform version we're releasing
-  TERRAFORM_VERSION: "1.1.7"
+  TERRAFORM_VERSION: "1.1.8"
+  ACCURICS_VERSION: "1.0.35"
+  TERRASCAN_VERSION: "1.14.0"
 
 jobs:
   build:
@@ -79,11 +81,11 @@ jobs:
         id: build-and-push
         uses: docker/build-push-action@v2
         with:
-          build-args: TERRAFORM_VERSION=${{ env.TERRAFORM_VERSION }}
+          build-args: TERRAFORM_VERSION=${{ env.TERRAFORM_VERSION }}, ACCURICS_VERSION=${{ env.ACCURICS_VERSION }}, TERRASCAN_VERSION=${{ env.TERRASCAN_VERSION }}
           context: .
           file: accurics-terrascan.dockerfile
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:ac-1.0.34-ts-1.13.2-tf-${{ env.TERRAFORM_VERSION }}, ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:ac-${{ env.ACCURICS_VERSION }}-ts-${{ env.TERRASCAN_VERSION }}-tf-${{ env.TERRAFORM_VERSION }}, ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
           labels: ${{ steps.meta.outputs.labels }}
 
       # # Sign the resulting Docker image digest except on PRs.

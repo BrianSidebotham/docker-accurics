@@ -1,13 +1,15 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 ARG TERRAFORM_VERSION
+ARG TERRASCAN_VERSION
+ARG ACCURICS_VERSION
 
 ENV PATH="/opt/bin:${PATH}"
 
 WORKDIR /opt/bin
 
-COPY accurics_linux.md5 .
-COPY terrascan_1.13.2_Linux_x86_64.tar.gz.md5 .
+COPY accurics_linux_${ACCURICS_VERSION}}.md5 .
+COPY terrascan_${TERRASCAN_VERSION}_Linux_x86_64.tar.gz.md5 .
 
 # Accurics uses git to determine information about the repo being scanned
 RUN apt-get update \
@@ -23,14 +25,14 @@ RUN gpg --quick-generate-key --batch --passphrase "" human@example.com \
     && gpg --import pgp_keys.asc \
     && gpg --batch --yes --sign-key 34365D9472D7468F
 
-RUN wget -q https://github.com/accurics/terrascan/releases/download/v1.13.2/terrascan_1.13.2_Linux_x86_64.tar.gz \
+RUN wget -q https://github.com/accurics/terrascan/releases/download/v1.14.0/terrascan_1.14.0_Linux_x86_64.tar.gz \
     && tar xf terrascan*.tar.gz \
-    && md5sum -c terrascan_1.13.2_Linux_x86_64.tar.gz.md5 \
+    && md5sum -c terrascan_1.14.0_Linux_x86_64.tar.gz.md5 \
     && rm -f terrascan*.tar.gz \
     && chmod 755 ./terrascan
 
-RUN wget -q https://downloads.accurics.com/cli/1.0.34/accurics_linux \
-    && md5sum -c accurics_linux.md5 \
+RUN wget -q https://downloads.accurics.com/cli/${ACCURICS_VERSION}/accurics_linux \
+    && md5sum -c accurics_linux_${ACCURICS_VERSION}.md5 \
     && mv ./accurics_linux ./accurics \
     && chmod 755 ./accurics
 
