@@ -25,9 +25,9 @@ RUN gpg --quick-generate-key --batch --passphrase "" human@example.com \
     && gpg --import pgp_keys.asc \
     && gpg --batch --yes --sign-key 34365D9472D7468F
 
-RUN wget -q https://github.com/accurics/terrascan/releases/download/v1.14.0/terrascan_1.14.0_Linux_x86_64.tar.gz \
+RUN wget -q https://github.com/accurics/terrascan/releases/download/${TERRASCAN_VERSION}/terrascan_1.14.0_Linux_x86_64.tar.gz \
     && tar xf terrascan*.tar.gz \
-    && md5sum -c terrascan_1.14.0_Linux_x86_64.tar.gz.md5 \
+    && md5sum -c terrascan_${TERRASCAN_VERSION}_Linux_x86_64.tar.gz.md5 \
     && rm -f terrascan*.tar.gz \
     && chmod 755 ./terrascan
 
