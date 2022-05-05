@@ -8,8 +8,8 @@ ENV PATH="/opt/bin:${PATH}"
 
 WORKDIR /opt/bin
 
-COPY accurics_linux_${ACCURICS_VERSION}.md5 .
-COPY terrascan_${TERRASCAN_VERSION}_Linux_x86_64.tar.gz.md5 .
+COPY accurics_linux_*.md5 .
+COPY terrascan_*_Linux_x86_64.tar.gz.md5 .
 
 # Accurics uses git to determine information about the repo being scanned
 RUN apt-get update \
