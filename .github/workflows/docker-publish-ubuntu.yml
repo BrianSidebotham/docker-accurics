@@ -81,14 +81,16 @@ jobs:
         id: build-and-push
         uses: docker/build-push-action@v3
         with:
-          build-args:
-            - TERRAFORM_VERSION: ${{ env.TERRAFORM_VERSION }}
-            - ACCURICS_VERSION: ${{ env.ACCURICS_VERSION }}
-            - TERRASCAN_VERSION: ${{ env.TERRASCAN_VERSION }}
+          build-args: |
+            TERRAFORM_VERSION=${{ env.TERRAFORM_VERSION }}
+            ACCURICS_VERSION=${{ env.ACCURICS_VERSION }}
+            TERRASCAN_VERSION=${{ env.TERRASCAN_VERSION }}
           context: .
           file: accurics-terrascan.dockerfile
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:ac-${{ env.ACCURICS_VERSION }}-ts-${{ env.TERRASCAN_VERSION }}-tf-${{ env.TERRAFORM_VERSION }}, ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:ac-${{ env.ACCURICS_VERSION }}-ts-${{ env.TERRASCAN_VERSION }}-tf-${{ env.TERRAFORM_VERSION }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
           labels: ${{ steps.meta.outputs.labels }}
 
       # # Sign the resulting Docker image digest except on PRs.
