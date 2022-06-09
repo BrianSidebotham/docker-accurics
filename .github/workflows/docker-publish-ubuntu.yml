@@ -18,14 +18,18 @@ env:
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
-  # The Terraform version we're releasing
-  TERRAFORM_VERSION: "1.1.9"
-  ACCURICS_VERSION: "1.0.36"
-  TERRASCAN_VERSION: "1.14.0"
 
 jobs:
   build:
-
+    strategy:
+      matrix:
+        terraform_version: ["1.0.11", "1.1.9", "1.2.2"]
+        accurics_version: ["1.0.37"]
+        terrascan_version: ["1.15.1"]
+    env:
+      TERRAFORM_VERSION: ${{ matrix.terraform_version }}
+      ACCURICS_VERSION: ${{ matrix.accurics_version }}
+      TERRASCAN_VERSION: ${{ matrix.terrascan_version }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
